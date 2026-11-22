@@ -490,3 +490,29 @@
     padding: 18px;
   }
 }
+
+
+/* Course actions and create/edit dialog */
+.course-actions { display: flex; gap: 8px; white-space: nowrap; }
+.action-btn { border: 0; border-radius: 7px; padding: 7px 10px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.action-btn.edit { color: #5b36a8; background: #f0eaff; }
+.action-btn.deactivate { color: #b42318; background: #fff0ee; }
+.modal-backdrop { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 20px; background: rgba(22, 18, 34, .55); }
+.course-modal { width: min(100%, 540px); max-height: 90vh; overflow-y: auto; padding: 26px; border-radius: 16px; background: #fff; box-shadow: 0 20px 70px rgba(0,0,0,.2); }
+.modal-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+.modal-heading h2 { margin: 6px 0; color: #29213f; font-size: 23px; }
+.modal-heading p { margin: 0; color: #898397; font-size: 13px; }
+.modal-close { border: 0; background: transparent; color: #716a7e; font-size: 28px; cursor: pointer; }
+.course-modal form { display: grid; gap: 16px; }
+.course-modal label { display: grid; gap: 7px; color: #4c455b; font-size: 13px; font-weight: 700; }
+.course-modal input:not([type="checkbox"]) { width: 100%; min-height: 42px; padding: 10px 12px; border: 1px solid #ded9e8; border-radius: 8px; color: #29243b; font: inherit; }
+.course-modal input:focus { outline: 2px solid #c4b5fd; border-color: #8b5cf6; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.course-modal .active-toggle { display: flex; align-items: center; gap: 9px; font-weight: 500; }
+.form-error { margin-bottom: 16px; padding: 11px 13px; border-radius: 8px; color: #b42318; background: #fff0ee; font-size: 13px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+.btn-cancel, .btn-save { border: 0; border-radius: 8px; padding: 11px 16px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.btn-cancel { color: #514a60; background: #f1eff5; }
+.btn-save { color: #fff; background: #7c3aed; }
+.btn-save:disabled, .btn-cancel:disabled { opacity: .6; cursor: not-allowed; }
+@media (max-width: 600px) { .course-page { padding: 16px; } .page-header { align-items: flex-start; flex-direction: column; } .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .form-row { grid-template-columns: 1fr; } .course-modal { padding: 20px; } }

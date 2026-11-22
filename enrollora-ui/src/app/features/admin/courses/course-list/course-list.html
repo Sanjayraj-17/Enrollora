@@ -7,7 +7,7 @@
       <p>Manage courses, fees, capacity and availability.</p>
     </div>
 
-    <button class="btn-add"><span>+</span> Add New Course</button>
+    <button class="btn-add" type="button" (click)="openCreateForm()"><span>+</span> Add New Course</button>
   </div>
 
   <!-- Summary Cards -->
@@ -94,6 +94,7 @@
               <th>ENROLLMENT</th>
               <th>AVAILABLE SEATS</th>
               <th>STATUS</th>
+              <th>ACTIONS</th>
             </tr>
           </thead>
 
@@ -156,6 +157,14 @@
                     {{ course.isActive ? 'Active' : 'Inactive' }}
                   </span>
                 </td>
+                <td>
+                  <div class="course-actions">
+                    <button type="button" class="action-btn edit" (click)="openEditForm(course)">Edit</button>
+                    @if (course.isActive) {
+                      <button type="button" class="action-btn deactivate" (click)="deactivateCourse(course)">Deactivate</button>
+                    }
+                  </div>
+                </td>
               </tr>
             }
           </tbody>
@@ -186,3 +195,50 @@
     }
   </div>
 </div>
+
+
+@if (isFormOpen()) {
+  <div class="modal-backdrop" (click)="closeForm()">
+    <section class="course-modal" role="dialog" aria-modal="true" aria-labelledby="course-form-title" (click)="$event.stopPropagation()">
+      <div class="modal-heading">
+        <div>
+          <span class="eyebrow">COURSE MANAGEMENT</span>
+          <h2 id="course-form-title">{{ editingCourseId() === null ? 'Add New Course' : 'Edit Course' }}</h2>
+          <p>Enter the course details below.</p>
+        </div>
+        <button type="button" class="modal-close" aria-label="Close" (click)="closeForm()">×</button>
+      </div>
+
+      @if (formError()) {
+        <div class="form-error" role="alert">{{ formError() }}</div>
+      }
+
+      <form #courseFormElement="ngForm" (ngSubmit)="saveCourse()">
+        <label>Course name
+          <input name="courseName" [(ngModel)]="courseForm.courseName" required maxlength="150" placeholder="e.g. Java Full Stack" />
+        </label>
+        <label>Duration
+          <input name="duration" [(ngModel)]="courseForm.duration" required maxlength="80" placeholder="e.g. 6 Months" />
+        </label>
+        <div class="form-row">
+          <label>Fees (₹)
+            <input name="fees" type="number" [(ngModel)]="courseForm.fees" required min="0" step="0.01" />
+          </label>
+          <label>Capacity
+            <input name="capacity" type="number" [(ngModel)]="courseForm.capacity" required min="1" step="1" />
+          </label>
+        </div>
+        <label class="active-toggle">
+          <input name="isActive" type="checkbox" [(ngModel)]="courseForm.isActive" />
+          Course is active and available for enrollment
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" (click)="closeForm()" [disabled]="isSaving()">Cancel</button>
+          <button type="submit" class="btn-save" [disabled]="isSaving() || courseFormElement.invalid">
+            {{ isSaving() ? 'Saving...' : editingCourseId() === null ? 'Create Course' : 'Save Changes' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+}
