@@ -1,8 +1,10 @@
+
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
 
 export const routes: Routes = [
+  // Authentication routes
   {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
@@ -11,11 +13,14 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () => import('./features/auth/register/register').then((m) => m.Register),
   },
+
+  // Administrator routes
   {
     path: 'admin',
     canActivate: [authGuard, roleGuard],
     data: { role: 'Administrator' },
-    loadComponent: () => import('./layouts/admin-layout/admin-layout').then((m) => m.AdminLayout),
+    loadComponent: () =>
+      import('./layouts/admin-layout/admin-layout').then((m) => m.AdminLayout),
     children: [
       {
         path: 'dashboard',
@@ -25,7 +30,9 @@ export const routes: Routes = [
       {
         path: 'students',
         loadComponent: () =>
-          import('./features/admin/students/student-list/student-list').then((m) => m.StudentList),
+          import('./features/admin/students/student-list/student-list').then(
+            (m) => m.StudentList,
+          ),
       },
       {
         path: 'courses',
@@ -34,7 +41,6 @@ export const routes: Routes = [
             (m) => m.CourseListComponent,
           ),
       },
-
       {
         path: 'enrollments',
         loadComponent: () =>
@@ -44,6 +50,8 @@ export const routes: Routes = [
       },
     ],
   },
+
+  // Student routes
   {
     path: 'student',
     canActivate: [authGuard, roleGuard],
@@ -70,6 +78,17 @@ export const routes: Routes = [
             (m) => m.MyEnrollments,
           ),
       },
+
+      // Student Profile route
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/student/profile/student-profile').then(
+            (m) => m.StudentProfile,
+          ),
+      },
+
+      // Default student page
       {
         path: '',
         redirectTo: 'courses',
@@ -77,6 +96,8 @@ export const routes: Routes = [
       },
     ],
   },
+
+  // Default routes
   {
     path: '',
     redirectTo: 'login',

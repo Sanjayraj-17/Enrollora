@@ -1,0 +1,143 @@
+
+<div class="profile-page">
+
+  <div class="profile-header">
+    <div>
+      <span class="profile-eyebrow">STUDENT ACCOUNT</span>
+      <h1>My Profile</h1>
+      <p>View and manage your personal information.</p>
+    </div>
+
+    @if (profile(); as student) {
+    <div class="profile-status" [class.pending]="student.status === 'Pending'"
+         [class.rejected]="student.status === 'Rejected'">
+      {{ student.status }}
+    </div>
+    }
+  </div>
+
+  @if (isLoading()) {
+  <div class="profile-card loading-state">
+    <p>Loading your profile...</p>
+  </div>
+  }
+
+  @if (errorMessage()) {
+  <div class="alert error-alert">
+    {{ errorMessage() }}
+  </div>
+  }
+
+  @if (successMessage()) {
+  <div class="alert success-alert">
+    {{ successMessage() }}
+  </div>
+  }
+
+  @if (!isLoading() && profile(); as student) {
+
+  <div class="profile-card">
+
+    <div class="profile-card-header">
+      <div class="avatar">
+        {{ student.name.charAt(0).toUpperCase() }}
+      </div>
+
+      <div>
+        <h2>{{ student.name }}</h2>
+        <p>{{ student.email }}</p>
+      </div>
+    </div>
+
+    <form (ngSubmit)="updateProfile()">
+
+      <h3>Personal Information</h3>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="studentName">Full Name</label>
+          <input id="studentName"
+                 type="text"
+                 name="name"
+                 [(ngModel)]="form.name"
+                 maxlength="120"
+                 required
+                 placeholder="Enter your name" />
+        </div>
+
+        <div class="form-group">
+          <label for="studentEmail">Email Address</label>
+          <input id="studentEmail"
+                 type="email"
+                 [value]="student.email"
+                 disabled />
+          <small>Email address cannot be changed here.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="studentDepartment">Department</label>
+          <input id="studentDepartment"
+                 type="text"
+                 name="department"
+                 [(ngModel)]="form.department"
+                 maxlength="100"
+                 required
+                 placeholder="Enter your department" />
+        </div>
+
+        <div class="form-group">
+          <label for="studentAge">Age</label>
+          <input id="studentAge"
+                 type="number"
+                 name="age"
+                 [(ngModel)]="form.age"
+                 min="17"
+                 max="60"
+                 required />
+        </div>
+
+      </div>
+
+      <h3 class="academic-heading">Academic Information</h3>
+
+      <div class="academic-grid">
+
+        <div class="info-box">
+          <span>CGPA</span>
+          <strong>{{ student.cgpa | number:'1.2-2' }}</strong>
+          <small>Read only</small>
+        </div>
+
+        <div class="info-box">
+          <span>Registration Date</span>
+          <strong>{{ student.registeredAt | date:'dd MMM yyyy' }}</strong>
+        </div>
+
+        <div class="info-box">
+          <span>Student ID</span>
+          <strong>#{{ student.studentId }}</strong>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button type="button"
+                class="btn-refresh"
+                (click)="loadProfile()"
+                [disabled]="isSaving()">
+          Refresh
+        </button>
+
+        <button type="submit"
+                class="btn-save"
+                [disabled]="isSaving()">
+          {{ isSaving() ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+  }
+
+</div>

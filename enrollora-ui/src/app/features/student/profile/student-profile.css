@@ -1,0 +1,277 @@
+
+.profile-page {
+  padding: 28px 32px;
+  color: #29213f;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  gap: 20px;
+}
+
+.profile-eyebrow {
+  color: #8950e8;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.profile-header h1 {
+  font-size: 30px;
+  font-weight: 800;
+  margin: 8px 0;
+}
+
+.profile-header p {
+  color: #898397;
+  font-size: 14px;
+  margin: 0;
+}
+
+.profile-status {
+  background: #e9f9ef;
+  color: #16834b;
+  padding: 9px 18px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+  .profile-status.pending {
+    background: #fff5df;
+    color: #a36a00;
+  }
+
+  .profile-status.rejected {
+    background: #fff0f0;
+    color: #d94343;
+  }
+
+.profile-card {
+  background: #fff;
+  border: 1px solid #eee7f8;
+  border-radius: 18px;
+  padding: 30px;
+  box-shadow: 0 8px 30px rgba(50, 30, 80, 0.05);
+}
+
+.profile-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 25px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid #eeeaf4;
+}
+
+.avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #803df0, #bd38dc);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.profile-card-header h2 {
+  font-size: 20px;
+  margin: 0 0 6px;
+}
+
+.profile-card-header p {
+  color: #898397;
+  font-size: 13px;
+  margin: 0;
+}
+
+.profile-card h3 {
+  font-size: 17px;
+  font-weight: 800;
+  margin: 0 0 22px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+  .form-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #443b55;
+  }
+
+  .form-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 14px;
+    border: 1px solid #e5ddef;
+    border-radius: 10px;
+    background: #fff;
+    color: #352c49;
+    font-size: 13px;
+    outline: none;
+    transition: 0.2s;
+  }
+
+    .form-group input:focus {
+      border-color: #9256f5;
+      box-shadow: 0 0 0 3px rgba(146, 86, 245, 0.1);
+    }
+
+    .form-group input:disabled {
+      background: #f6f4f9;
+      color: #898397;
+      cursor: not-allowed;
+    }
+
+  .form-group small {
+    color: #9991a5;
+    font-size: 11px;
+  }
+
+.academic-heading {
+  margin-top: 32px !important;
+}
+
+.academic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.info-box {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 18px;
+  border-radius: 12px;
+  background: #f8f5ff;
+  border: 1px solid #eee5ff;
+}
+
+  .info-box span {
+    color: #898397;
+    font-size: 12px;
+  }
+
+  .info-box strong {
+    color: #35204f;
+    font-size: 21px;
+  }
+
+  .info-box small {
+    color: #9991a5;
+    font-size: 11px;
+  }
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid #eeeaf4;
+}
+
+.btn-refresh,
+.btn-save {
+  border: none;
+  border-radius: 9px;
+  padding: 12px 22px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-refresh {
+  background: #f1edf7;
+  color: #625b70;
+}
+
+  .btn-refresh:hover {
+    background: #e8e1f1;
+  }
+
+.btn-save {
+  background: linear-gradient(135deg, #803df0, #ad38e8);
+  color: #fff;
+  box-shadow: 0 5px 14px rgba(128, 61, 240, 0.2);
+}
+
+  .btn-save:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  .btn-save:disabled,
+  .btn-refresh:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+.alert {
+  padding: 13px 16px;
+  border-radius: 9px;
+  margin-bottom: 18px;
+  font-size: 13px;
+}
+
+.error-alert {
+  background: #fff0f0;
+  border: 1px solid #ffdada;
+  color: #c24141;
+}
+
+.success-alert {
+  background: #eafaf0;
+  border: 1px solid #c9efd6;
+  color: #16834b;
+}
+
+.loading-state {
+  text-align: center;
+  color: #898397;
+}
+
+@media (max-width: 700px) {
+  .profile-page {
+    padding: 20px 15px;
+  }
+
+  .profile-card {
+    padding: 20px;
+  }
+
+  .form-grid,
+  .academic-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-header {
+    align-items: flex-start;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-refresh,
+  .btn-save {
+    width: 100%;
+  }
+}

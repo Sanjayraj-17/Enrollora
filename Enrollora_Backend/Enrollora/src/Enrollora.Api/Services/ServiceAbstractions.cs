@@ -1,3 +1,4 @@
+
 using Enrollora.Api.DTOs;
 using Enrollora.Api.Models;
 
@@ -25,8 +26,13 @@ public interface IStudentService
     Task<PagedResult<StudentResponse>> GetStudentsAsync(StudentQuery query, CancellationToken ct);
     Task<StudentResponse> GetByIdAsync(int id, CancellationToken ct);
     Task<StudentResponse> GetMeAsync(int studentId, CancellationToken ct);
-    Task<StudentResponse> UpdateMeAsync(int studentId, UpdateStudentRequest request, CancellationToken ct);
-    Task<StudentResponse> UpdateAsync(int id, UpdateStudentRequest request, CancellationToken ct);
+
+    Task<StudentResponse> UpdateMeAsync(
+        int studentId, UpdateStudentProfileRequest request, CancellationToken ct);
+
+    Task<StudentResponse> UpdateAsync(
+        int id, UpdateStudentRequest request, CancellationToken ct);
+
     Task ReviewAsync(int id, StudentStatus status, CancellationToken ct);
     Task DeleteAsync(int id, CancellationToken ct);
 }
