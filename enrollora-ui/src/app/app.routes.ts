@@ -7,11 +7,13 @@ export const routes: Routes = [
   // Authentication routes
   {
     path: 'login',
-    loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
+    loadComponent: () =>
+      import('./features/auth/login/login').then((m) => m.Login),
   },
   {
     path: 'register',
-    loadComponent: () => import('./features/auth/register/register').then((m) => m.Register),
+    loadComponent: () =>
+      import('./features/auth/register/register').then((m) => m.Register),
   },
 
   // Administrator routes
@@ -20,12 +22,16 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: 'Administrator' },
     loadComponent: () =>
-      import('./layouts/admin-layout/admin-layout').then((m) => m.AdminLayout),
+      import('./layouts/admin-layout/admin-layout').then(
+        (m) => m.AdminLayout,
+      ),
     children: [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./features/admin/dashboard/dashboard').then((m) => m.Dashboard),
+          import('./features/admin/dashboard/dashboard').then(
+            (m) => m.Dashboard,
+          ),
       },
       {
         path: 'students',
@@ -57,12 +63,16 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: 'Student' },
     loadComponent: () =>
-      import('./layouts/student-layout/student-layout').then((m) => m.StudentLayout),
+      import('./layouts/student-layout/student-layout').then(
+        (m) => m.StudentLayout,
+      ),
     children: [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./features/student/dashboard/dashboard').then((m) => m.Dashboard),
+          import('./features/student/dashboard/dashboard').then(
+            (m) => m.Dashboard,
+          ),
       },
       {
         path: 'courses',
@@ -74,12 +84,10 @@ export const routes: Routes = [
       {
         path: 'enrollments',
         loadComponent: () =>
-          import('./features/enrollments/student/my-enrollments/my-enrollments').then(
+          import('./features/student/enrollments/student/my-enrollments/my-enrollments').then(
             (m) => m.MyEnrollments,
           ),
       },
-
-      // Student Profile route
       {
         path: 'profile',
         loadComponent: () =>
@@ -87,8 +95,6 @@ export const routes: Routes = [
             (m) => m.StudentProfile,
           ),
       },
-
-      // Default student page
       {
         path: '',
         redirectTo: 'courses',
