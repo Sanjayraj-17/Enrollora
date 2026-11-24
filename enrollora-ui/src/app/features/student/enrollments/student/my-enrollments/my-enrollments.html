@@ -1,5 +1,7 @@
 
 <div class="enrollments-page">
+
+  <!-- Page Header -->
   <div class="page-header">
     <div>
       <span class="eyebrow">LEARNING JOURNEY</span>
@@ -7,36 +9,57 @@
       <p>View your enrolled courses and manage cancellation requests.</p>
     </div>
 
-    <button class="refresh-btn" (click)="refresh()" [disabled]="isLoading()">
+    <button class="refresh-btn"
+            (click)="refresh()"
+            [disabled]="isLoading()">
       Refresh
     </button>
   </div>
 
+  <!-- Error Message -->
   @if (errorMessage()) {
-  <div class="alert error">{{ errorMessage() }}</div>
+  <div class="alert error">
+    {{ errorMessage() }}
+  </div>
   }
 
+  <!-- Success Message -->
   @if (successMessage()) {
-  <div class="alert success">{{ successMessage() }}</div>
+  <div class="alert success">
+    {{ successMessage() }}
+  </div>
   }
 
   @if (isLoading()) {
-  <div class="empty-state">Loading your enrollments...</div>
+
+  <div class="empty-state">
+    Loading your enrollments...
+  </div>
+
   } @else {
+
+  <!-- Enrolled Courses -->
   <section class="section-card">
+
     <div class="section-heading">
       <div>
         <h2>Enrolled Courses</h2>
         <p>Your current course registrations</p>
       </div>
-      <span class="count">{{ enrollments().length }} Courses</span>
+
+      <span class="count">
+        {{ totalRecords() }} Courses
+      </span>
     </div>
 
     @if (enrollments().length === 0) {
+
     <div class="empty-state">
       You have not enrolled in any courses yet.
     </div>
+
     } @else {
+
     <div class="table-wrapper">
       <table>
         <thead>
@@ -52,60 +75,117 @@
         <tbody>
           @for (item of enrollments(); track item.enrollmentId) {
           <tr>
+
             <td>
               <strong>{{ item.courseName }}</strong>
             </td>
 
-            <td>#{{ item.enrollmentId }}</td>
+            <td>
+              #{{ item.enrollmentId }}
+            </td>
 
-            <td>{{ item.enrolledAt | date:'dd MMM yyyy' }}</td>
+            <td>
+              {{ item.enrolledAt | date:'dd MMM yyyy' }}
+            </td>
 
             <td>
               <span class="status-badge"
                     [class.active]="isActive(item.status)"
-                    [class.cancelled]="statusName(item.status) === 'Cancelled'">
-                {{ statusName(item.status) }}
+                    [class.cancelled]="statusLabel(item.status) === 'Cancelled'">
+
+                {{ statusLabel(item.status) }}
+
               </span>
             </td>
 
             <td>
               @if (isActive(item.status)) {
+
               @if (hasPendingRequest(item.enrollmentId)) {
-              <span class="pending-text">Request Pending</span>
+
+              <span class="pending-text">
+                Request Pending
+              </span>
+
               } @else {
+
               <button class="cancel-btn"
                       (click)="openCancellationForm(item.enrollmentId)">
                 Request Cancellation
               </button>
+
               }
+
               } @else {
-              <span class="muted">Not available</span>
+
+              <span class="muted">
+                Not available
+              </span>
+
               }
             </td>
+
           </tr>
           }
         </tbody>
       </table>
     </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+
+      <span>
+        Showing {{ enrollments().length }} of
+        {{ totalRecords() }} enrollments
+      </span>
+
+      <div>
+        <button (click)="previousPage()"
+                [disabled]="pageNumber() === 1">
+          Previous
+        </button>
+
+        <span class="current-page">
+          {{ pageNumber() }} / {{ totalPages() }}
+        </span>
+
+        <button (click)="nextPage()"
+                [disabled]="pageNumber() >= totalPages()">
+          Next
+        </button>
+      </div>
+
+    </div>
+
     }
+
   </section>
 
+  <!-- Cancellation History -->
   <section class="section-card history-section">
+
     <div class="section-heading">
       <div>
         <h2>Cancellation History</h2>
         <p>Track the status of your cancellation requests</p>
       </div>
-      <span class="count">{{ cancellationRequests().length }} Requests</span>
+
+      <span class="count">
+        {{ cancellationRequests().length }} Requests
+      </span>
     </div>
 
     @if (cancellationRequests().length === 0) {
+
     <div class="empty-state">
       You have not submitted any cancellation requests.
     </div>
+
     } @else {
+
     <div class="table-wrapper">
       <table>
+
         <thead>
           <tr>
             <th>Course</th>
@@ -122,39 +202,72 @@
           track request.cancellationRequestId
           ) {
           <tr>
-            <td><strong>{{ request.courseName }}</strong></td>
-            <td>{{ request.reason }}</td>
-            <td>{{ request.requestedAt | date:'dd MMM yyyy' }}</td>
+
+            <td>
+              <strong>{{ request.courseName }}</strong>
+              <small>
+                Request #{{ request.cancellationRequestId }}
+              </small>
+            </td>
+
+            <td>
+              {{ request.reason }}
+            </td>
+
+            <td>
+              {{ request.requestedAt | date:'dd MMM yyyy' }}
+            </td>
+
+            <!-- Correct Cancellation Status Mapping -->
             <td>
               <span class="status-badge"
-                    [class.pending]="isPending(request.status)"
-                    [class.active]="statusName(request.status) === 'Approved'"
-                    [class.cancelled]="statusName(request.status) === 'Rejected'">
-                {{ statusName(request.status) }}
+                    [class.pending]="statusName(request.status, 'cancellation') === 'Pending'"
+                    [class.approved]="statusName(request.status, 'cancellation') === 'Approved'"
+                    [class.rejected]="statusName(request.status, 'cancellation') === 'Rejected'">
+
+                {{ statusName(request.status, 'cancellation') }}
+
               </span>
             </td>
-            <td>{{ request.adminRemarks || '—' }}</td>
+
+            <!-- Admin Remarks -->
+            <td>
+              {{ request.adminRemarks?.trim() || '—' }}
+            </td>
+
           </tr>
           }
         </tbody>
+
       </table>
     </div>
+
     }
+
   </section>
+
   }
 
+  <!-- Cancellation Request Modal -->
   @if (selectedEnrollmentId !== null) {
+
   <div class="modal-backdrop">
+
     <div class="modal-card">
+
       <h2>Request Course Cancellation</h2>
+
       <p>
         Please provide a reason for cancelling enrollment
         #{{ selectedEnrollmentId }}.
       </p>
 
-      <label for="reason">Cancellation Reason</label>
+      <label for="reason">
+        Cancellation Reason
+      </label>
 
       <textarea id="reason"
+                name="reason"
                 [(ngModel)]="cancellationReason"
                 rows="5"
                 maxlength="500"
@@ -166,6 +279,7 @@
       </div>
 
       <div class="modal-actions">
+
         <button class="secondary-btn"
                 (click)="closeCancellationForm()"
                 [disabled]="isSubmitting()">
@@ -175,10 +289,17 @@
         <button class="submit-btn"
                 (click)="submitCancellationRequest()"
                 [disabled]="isSubmitting() || !cancellationReason.trim()">
+
           {{ isSubmitting() ? 'Submitting...' : 'Submit Request' }}
+
         </button>
+
       </div>
+
     </div>
+
   </div>
+
   }
+
 </div>

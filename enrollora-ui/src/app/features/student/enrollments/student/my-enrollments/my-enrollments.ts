@@ -63,6 +63,11 @@ export class MyEnrollments implements OnInit {
   errorMessage = signal('');
   successMessage = signal('');
 
+  pageNumber = signal(1);
+  pageSize = signal(10);
+  totalRecords = signal(0);
+  totalPages = signal(0);
+
   selectedEnrollmentId: number | null = null;
   cancellationReason = '';
 
@@ -76,8 +81,8 @@ export class MyEnrollments implements OnInit {
     this.errorMessage.set('');
 
     const enrollmentParams = new HttpParams()
-      .set('pageNumber', '1')
-      .set('pageSize', '100');
+      .set('pageNumber', this.pageNumber().toString())
+      .set('pageSize', this.pageSize().toString());
 
     this.http.get<PagedResult<EnrollmentResponse>>(
       `${this.apiUrl}/enrollments/my`,
@@ -85,6 +90,8 @@ export class MyEnrollments implements OnInit {
     ).subscribe({
       next: (response) => {
         this.enrollments.set(response.items ?? []);
+        this.totalRecords.set(response.totalRecords);
+        this.totalPages.set(response.totalPages);
         this.loadCancellationRequests();
       },
       error: (error) => {
@@ -158,38 +165,57 @@ export class MyEnrollments implements OnInit {
     return this.statusName(status, 'enrollment') === 'Active';
   }
 
+  statusLabel(status: string | number): string {
+    return this.statusName(status, 'enrollment');
+  }
+
   // Check pending cancellation request.
   isPending(status: string | number): boolean {
     return this.statusName(status, 'cancellation') === 'Pending';
   }
 
-  // Convert numeric backend enum values into readable status names.
+  // Convert backend enum values into readable status names.
   statusName(
     status: string | number,
     type: 'enrollment' | 'cancellation' = 'enrollment',
   ): string {
-    if (typeof status === 'string') {
-      return status;
-    }
+    const value = typeof status === 'string'
+      ? status.trim()
+      : status;
 
     if (type === 'enrollment') {
-      switch (status) {
+      switch (value) {
         case 0:
+        case '0':
+        case 'Active':
           return 'Active';
+
         case 1:
+        case '1':
+        case 'Cancelled':
           return 'Cancelled';
+
         default:
           return 'Unknown';
       }
     }
 
-    switch (status) {
+    switch (value) {
       case 0:
+      case '0':
+      case 'Pending':
         return 'Pending';
+
       case 1:
+      case '1':
+      case 'Approved':
         return 'Approved';
+
       case 2:
+      case '2':
+      case 'Rejected':
         return 'Rejected';
+
       default:
         return 'Unknown';
     }
@@ -209,7 +235,9 @@ export class MyEnrollments implements OnInit {
     }
 
     if (reason.length > 500) {
-      this.errorMessage.set('Cancellation reason cannot exceed 500 characters.');
+      this.errorMessage.set(
+        'Cancellation reason cannot exceed 500 characters.',
+      );
       return;
     }
 
@@ -246,6 +274,20 @@ export class MyEnrollments implements OnInit {
         this.isSubmitting.set(false);
       },
     });
+  }
+
+  previousPage(): void {
+    if (this.pageNumber() > 1) {
+      this.pageNumber.update(page => page - 1);
+      this.loadData();
+    }
+  }
+
+  nextPage(): void {
+    if (this.pageNumber() < this.totalPages()) {
+      this.pageNumber.update(page => page + 1);
+      this.loadData();
+    }
   }
 
   // Refresh enrollment and cancellation data.

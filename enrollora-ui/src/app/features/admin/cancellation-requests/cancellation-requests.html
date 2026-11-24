@@ -1,0 +1,272 @@
+
+<div class="cancellation-page">
+
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">ADMINISTRATION</span>
+      <h1>Cancellation Requests</h1>
+      <p>Review and manage student course cancellation requests.</p>
+    </div>
+
+    <button class="refresh-btn"
+            (click)="refresh()"
+            [disabled]="isLoading()">
+      Refresh
+    </button>
+  </div>
+
+  @if (errorMessage()) {
+  <div class="alert error-alert">
+    {{ errorMessage() }}
+  </div>
+  }
+
+  @if (successMessage()) {
+  <div class="alert success-alert">
+    {{ successMessage() }}
+  </div>
+  }
+
+  <section class="summary-grid">
+
+    <div class="summary-card">
+      <span>Total Requests</span>
+      <strong>{{ requests().length }}</strong>
+    </div>
+
+    <div class="summary-card pending-card">
+      <span>Pending</span>
+      <strong>
+        {{ requests().filter(r => statusName(r.status) === 'Pending').length }}
+      </strong>
+    </div>
+
+    <div class="summary-card approved-card">
+      <span>Approved</span>
+      <strong>
+        {{ requests().filter(r => statusName(r.status) === 'Approved').length }}
+      </strong>
+    </div>
+
+    <div class="summary-card rejected-card">
+      <span>Rejected</span>
+      <strong>
+        {{ requests().filter(r => statusName(r.status) === 'Rejected').length }}
+      </strong>
+    </div>
+
+  </section>
+
+  <section class="table-card">
+
+    <div class="section-heading">
+      <div>
+        <h2>Student Requests</h2>
+        <p>Review the details and take appropriate action.</p>
+      </div>
+
+      <span class="request-count">
+        {{ requests().length }} Requests
+      </span>
+    </div>
+
+    @if (isLoading()) {
+
+    <div class="empty-state">
+      Loading cancellation requests...
+    </div>
+
+    } @else if (requests().length === 0) {
+
+    <div class="empty-state">
+      <span class="empty-icon">📋</span>
+      <h3>No cancellation requests</h3>
+      <p>There are currently no student cancellation requests.</p>
+    </div>
+
+    } @else {
+
+    <div class="table-wrapper">
+
+      <table>
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Reason</th>
+            <th>Requested Date</th>
+            <th>Status</th>
+            <th>Admin Remarks</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (
+          request of requests();
+          track request.cancellationRequestId
+          ) {
+
+          <tr>
+
+            <td>
+              <div class="student-cell">
+                <strong>{{ request.studentName }}</strong>
+                <small>{{ request.studentEmail }}</small>
+              </div>
+            </td>
+
+            <td>
+              <strong>{{ request.courseName }}</strong>
+            </td>
+
+            <td class="reason-cell">
+              {{ request.reason }}
+            </td>
+
+            <td>
+              {{ request.requestedAt | date:'dd MMM yyyy' }}
+            </td>
+
+            <td>
+              <span class="status-badge"
+                    [class.pending]="statusName(request.status) === 'Pending'"
+                    [class.approved]="statusName(request.status) === 'Approved'"
+                    [class.rejected]="statusName(request.status) === 'Rejected'">
+                {{ statusName(request.status) }}
+              </span>
+            </td>
+
+            <td>
+              {{ request.adminRemarks || '—' }}
+            </td>
+
+            <td>
+
+              @if (statusName(request.status) === 'Pending') {
+
+              <div class="action-buttons">
+
+                <button class="approve-btn"
+                        (click)="openReview(request, 'approve')">
+                  Approve
+                </button>
+
+                <button class="reject-btn"
+                        (click)="openReview(request, 'reject')">
+                  Reject
+                </button>
+
+              </div>
+
+              } @else {
+
+              <span class="reviewed-text">Reviewed</span>
+
+              }
+
+            </td>
+
+          </tr>
+
+          }
+
+        </tbody>
+      </table>
+
+    </div>
+
+    }
+
+  </section>
+
+  <!-- Review Cancellation Modal -->
+  @if (selectedRequest) {
+
+  <div class="modal-backdrop">
+
+    <div class="modal-card">
+
+      <h2>
+        {{
+            reviewAction === 'approve'
+              ? 'Approve Cancellation'
+              : 'Reject Cancellation'
+        }}
+      </h2>
+
+      <p>
+        Review the cancellation request for
+        <strong>{{ selectedRequest.courseName }}</strong>
+        submitted by
+        <strong>{{ selectedRequest.studentName }}</strong>.
+      </p>
+
+      <div class="request-details">
+
+        <div>
+          <span>Enrollment ID</span>
+          <strong>#{{ selectedRequest.enrollmentId }}</strong>
+        </div>
+
+        <div>
+          <span>Student Email</span>
+          <strong>{{ selectedRequest.studentEmail }}</strong>
+        </div>
+
+        <div>
+          <span>Reason</span>
+          <strong>{{ selectedRequest.reason }}</strong>
+        </div>
+
+      </div>
+
+      <label for="adminRemarks">
+        Admin Remarks
+      </label>
+
+      <textarea id="adminRemarks"
+                name="adminRemarks"
+                [(ngModel)]="adminRemarks"
+                rows="4"
+                maxlength="1000"
+                placeholder="Enter remarks for the student...">
+        </textarea>
+
+      <div class="character-count">
+        {{ adminRemarks.length }}/1000
+      </div>
+
+      <div class="modal-actions">
+
+        <button class="secondary-btn"
+                (click)="closeReview()"
+                [disabled]="isReviewing()">
+          Cancel
+        </button>
+
+        <button [class.approve-btn]="reviewAction === 'approve'"
+                [class.reject-btn]="reviewAction === 'reject'"
+                (click)="submitReview()"
+                [disabled]="isReviewing()">
+
+          {{
+              isReviewing()
+                ? 'Processing...'
+                : reviewAction === 'approve'
+                  ? 'Confirm Approval'
+                  : 'Confirm Rejection'
+          }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>
