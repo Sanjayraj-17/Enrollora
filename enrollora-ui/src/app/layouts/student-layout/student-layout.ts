@@ -1,7 +1,14 @@
+
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet
+} from '@angular/router';
+
 import { AuthService } from '../../core/auth/auth.service';
-import { Router } from '@angular/router';
+import { TokenService } from '../../core/auth/token.service';
 
 @Component({
   standalone: true,
@@ -11,8 +18,22 @@ import { Router } from '@angular/router';
   templateUrl: './student-layout.html',
 })
 export class StudentLayout {
+
   private authService = inject(AuthService);
+  private tokenService = inject(TokenService);
   private router = inject(Router);
+
+  get studentName(): string {
+    return this.tokenService.getName() || 'Student';
+  }
+
+  get studentEmail(): string {
+    return this.tokenService.getEmail() || 'Learning Portal';
+  }
+
+  get studentInitial(): string {
+    return this.studentName.charAt(0).toUpperCase();
+  }
 
   logout(): void {
     this.authService.logout();

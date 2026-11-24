@@ -1,6 +1,9 @@
 
 <div class="student-wrapper">
+
+  <!-- Sidebar -->
   <aside class="sidebar">
+
     <div class="brand">
       <span class="brand-icon">E</span>
       <span>Enrollora</span>
@@ -9,49 +12,72 @@
     <nav class="sidebar-section">
       <small class="section-label">STUDENT MENU</small>
 
-      <a routerLink="/student/dashboard" routerLinkActive="active" class="nav-link">
+      <a routerLink="/student/dashboard"
+         routerLinkActive="active"
+         class="nav-link">
         <span class="nav-icon">▦</span>
         Dashboard
       </a>
 
-      <a routerLink="/student/courses" routerLinkActive="active" class="nav-link">
+      <a routerLink="/student/courses"
+         routerLinkActive="active"
+         class="nav-link">
         <span class="nav-icon">▤</span>
         Available Courses
       </a>
 
-      <a routerLink="/student/enrollments" routerLinkActive="active" class="nav-link">
+      <a routerLink="/student/enrollments"
+         routerLinkActive="active"
+         class="nav-link">
         <span class="nav-icon">▣</span>
         My Enrollments
       </a>
 
-      <!-- NEW: Student Profile -->
-      <a routerLink="/student/profile" routerLinkActive="active" class="nav-link">
+      <a routerLink="/student/profile"
+         routerLinkActive="active"
+         class="nav-link">
         <span class="nav-icon">👤</span>
         My Profile
       </a>
+
     </nav>
 
+    <!-- Dynamic Student Information -->
     <div class="sidebar-footer">
-      <div class="student-avatar">S</div>
-      <div class="student-info">
-        <strong>Student</strong>
-        <small>Learning Portal</small>
+
+      <div class="student-avatar">
+        {{ studentInitial }}
       </div>
+
+      <div class="student-info">
+        <strong>{{ studentName }}</strong>
+        <small>{{ studentEmail }}</small>
+      </div>
+
     </div>
+
   </aside>
 
+  <!-- Main Area -->
   <main class="main-area">
+
     <header class="topbar">
       <div>
         <span class="topbar-title">Student Portal</span>
-        <small class="topbar-subtitle">Build your learning journey</small>
+        <small class="topbar-subtitle">
+          Build your learning journey
+        </small>
       </div>
 
-      <button class="logout-btn" (click)="logout()">Logout</button>
+      <button class="logout-btn" (click)="logout()">
+        Logout
+      </button>
     </header>
 
     <section class="page-content">
       <router-outlet></router-outlet>
     </section>
+
   </main>
+
 </div>

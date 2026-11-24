@@ -1,10 +1,16 @@
+
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 
-import { LoginRequest, LoginResponse, RegisterStudentRequest, ApiMessage } from './auth.models';
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterStudentRequest,
+  ApiMessage
+} from './auth.models';
 
 import { TokenService } from './token.service';
 
@@ -22,6 +28,7 @@ export class AuthService {
       tap((response) => {
         this.tokenService.setToken(response.token);
         this.tokenService.setRole(response.role);
+        this.tokenService.setUserDetails(response.name, response.email);
       }),
     );
   }

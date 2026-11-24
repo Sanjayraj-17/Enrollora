@@ -8,6 +8,8 @@ export class TokenService {
 
   private readonly TOKEN_KEY = 'enrollora_token';
   private readonly ROLE_KEY = 'enrollora_role';
+  private readonly NAME_KEY = 'enrollora_name';
+  private readonly EMAIL_KEY = 'enrollora_email';
 
   setToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
@@ -25,9 +27,24 @@ export class TokenService {
     return localStorage.getItem(this.ROLE_KEY);
   }
 
+  setUserDetails(name: string, email: string): void {
+    localStorage.setItem(this.NAME_KEY, name);
+    localStorage.setItem(this.EMAIL_KEY, email);
+  }
+
+  getName(): string | null {
+    return localStorage.getItem(this.NAME_KEY);
+  }
+
+  getEmail(): string | null {
+    return localStorage.getItem(this.EMAIL_KEY);
+  }
+
   removeToken(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.ROLE_KEY);
+    localStorage.removeItem(this.NAME_KEY);
+    localStorage.removeItem(this.EMAIL_KEY);
   }
 
   hasToken(): boolean {
